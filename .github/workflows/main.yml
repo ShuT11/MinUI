@@ -1,0 +1,40 @@
+name: Build MinUI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [miyoomini, trimuismart]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache toolchain
+        uses: actions/cache@v4
+        with:
+          path: toolchains
+          key: ${{ runner.os }}-toolchains-${{ matrix.platform }}-${{ hashFiles('makefile.toolchain') }}
+          restore-keys: |
+            ${{ runner.os }}-toolchains-${{ matrix.platform }}-
+
+      - name: Build
+        run: |
+          script -qfc "make PLATFORM=${{ matrix.platform }} build"
+
+      - name: Package firmware
+        run: |
+          script -qfc "make PLATFORMS=${{ matrix.platform }} setup system cores special package"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}-firmware
+          path: |
+            build/BASE
+            build/EXTRAS
+            releases
