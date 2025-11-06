@@ -607,46 +607,87 @@ typedef struct OptionList {
 	// OptionList_callback_t on_set;
 } OptionList;
 
+static char* onoff_values[] = {
+        "Off",
+        "On",
+        NULL
+};
 static char* onoff_labels[] = {
-	"Off",
-	"On",
-	NULL
+        "关",
+        "开",
+        NULL
+};
+static char* scaling_values[] = {
+        "Native",
+        "Aspect",
+        "Fullscreen",
+        "Cropped",
+        NULL
 };
 static char* scaling_labels[] = {
-	"Native",
-	"Aspect",
-	"Fullscreen",
-	"Cropped",
-	NULL
+        "原生",
+        "等比",
+        "全屏",
+        "裁剪",
+        NULL
+};
+static char* effect_values[] = {
+        "None",
+        "Line",
+        "Grid",
+        NULL
 };
 static char* effect_labels[] = {
-	"None",
-	"Line",
-	"Grid",
-	NULL
+        "无",
+        "线条",
+        "网格",
+        NULL
+};
+static char* sharpness_values[] = {
+        "Sharp",
+        "Crisp",
+        "Soft",
+        NULL
 };
 static char* sharpness_labels[] = {
-	"Sharp",
-	"Crisp",
-	"Soft",
-	NULL
+        "锐利",
+        "清晰",
+        "柔和",
+        NULL
+};
+static char* tearing_values[] = {
+        "Off",
+        "Lenient",
+        "Strict",
+        NULL
 };
 static char* tearing_labels[] = {
-	"Off",
-	"Lenient",
-	"Strict",
-	NULL
+        "关闭",
+        "宽松",
+        "严格",
+        NULL
+};
+static char* max_ff_values[] = {
+        "None",
+        "2x",
+        "3x",
+        "4x",
+        "5x",
+        "6x",
+        "7x",
+        "8x",
+        NULL,
 };
 static char* max_ff_labels[] = {
-	"None",
-	"2x",
-	"3x",
-	"4x",
-	"5x",
-	"6x",
-	"7x",
-	"8x",
-	NULL,
+        "无",
+        "2倍",
+        "3倍",
+        "4倍",
+        "5倍",
+        "6倍",
+        "7倍",
+        "8倍",
+        NULL,
 };
 
 ///////////////////////////////
@@ -749,54 +790,128 @@ static const char* device_button_names[LOCAL_BUTTON_COUNT] = {
 
 
 // NOTE: these must be in BTN_ID_ order also off by 1 because of NONE (which is -1 in BTN_ID_ land)
-static char* button_labels[] = {
-	"NONE", // displayed by default
-	"UP",
-	"DOWN",
-	"LEFT",
-	"RIGHT",
-	"A",
-	"B",
-	"X",
-	"Y",
-	"START",
-	"SELECT",
-	"L1",
-	"R1",
-	"L2",
-	"R2",
-	"L3",
-	"R3",
-	"MENU+UP",
-	"MENU+DOWN",
-	"MENU+LEFT",
-	"MENU+RIGHT",
-	"MENU+A",
-	"MENU+B",
-	"MENU+X",
-	"MENU+Y",
-	"MENU+START",
-	"MENU+SELECT",
-	"MENU+L1",
-	"MENU+R1",
-	"MENU+L2",
-	"MENU+R2",
-	"MENU+L3",
-	"MENU+R3",
-	NULL,
+static char* button_label_values[] = {
+        "NONE", // displayed by default
+        "UP",
+        "DOWN",
+        "LEFT",
+        "RIGHT",
+        "A",
+        "B",
+        "X",
+        "Y",
+        "START",
+        "SELECT",
+        "L1",
+        "R1",
+        "L2",
+        "R2",
+        "L3",
+        "R3",
+        "MENU+UP",
+        "MENU+DOWN",
+        "MENU+LEFT",
+        "MENU+RIGHT",
+        "MENU+A",
+        "MENU+B",
+        "MENU+X",
+        "MENU+Y",
+        "MENU+START",
+        "MENU+SELECT",
+        "MENU+L1",
+        "MENU+R1",
+        "MENU+L2",
+        "MENU+R2",
+        "MENU+L3",
+        "MENU+R3",
+        NULL,
+};
+static char* button_label_texts[] = {
+        "无", // displayed by default
+        "上",
+        "下",
+        "左",
+        "右",
+        "A",
+        "B",
+        "X",
+        "Y",
+        "开始",
+        "选择",
+        "L1",
+        "R1",
+        "L2",
+        "R2",
+        "L3",
+        "R3",
+        "菜单+上",
+        "菜单+下",
+        "菜单+左",
+        "菜单+右",
+        "菜单+A",
+        "菜单+B",
+        "菜单+X",
+        "菜单+Y",
+        "菜单+开始",
+        "菜单+选择",
+        "菜单+L1",
+        "菜单+R1",
+        "菜单+L2",
+        "菜单+R2",
+        "菜单+L3",
+        "菜单+R3",
+        NULL,
+};
+
+static const char* getControlDisplayName(const char* name) {
+        if (!strcmp(name, "Up")) return "上";
+        if (!strcmp(name, "Down")) return "下";
+        if (!strcmp(name, "Left")) return "左";
+        if (!strcmp(name, "Right")) return "右";
+        if (!strcmp(name, "A Button")) return "A 键";
+        if (!strcmp(name, "B Button")) return "B 键";
+        if (!strcmp(name, "X Button")) return "X 键";
+        if (!strcmp(name, "Y Button")) return "Y 键";
+        if (!strcmp(name, "Start")) return "开始";
+        if (!strcmp(name, "Select")) return "选择";
+        if (!strcmp(name, "L1 Button")) return "L1 键";
+        if (!strcmp(name, "R1 Button")) return "R1 键";
+        if (!strcmp(name, "L2 Button")) return "L2 键";
+        if (!strcmp(name, "R2 Button")) return "R2 键";
+        if (!strcmp(name, "L3 Button")) return "L3 键";
+        if (!strcmp(name, "R3 Button")) return "R3 键";
+        return name;
+}
+
+static const char* getShortcutDisplayName(const char* name) {
+        if (!strcmp(name, "Save State")) return "保存状态";
+        if (!strcmp(name, "Load State")) return "读取状态";
+        if (!strcmp(name, "Reset Game")) return "重置游戏";
+        if (!strcmp(name, "Save & Quit")) return "保存并退出";
+        if (!strcmp(name, "Cycle Scaling")) return "切换缩放";
+        if (!strcmp(name, "Cycle Effect")) return "切换特效";
+        if (!strcmp(name, "Toggle FF")) return "切换快进";
+        if (!strcmp(name, "Hold FF")) return "按住快进";
+        return name;
+}
+static char* overclock_values[] = {
+        "Powersave",
+        "Normal",
+        "Performance",
+        NULL,
 };
 static char* overclock_labels[] = {
-	"Powersave",
-	"Normal",
-	"Performance",
-	NULL,
+        "省电",
+        "标准",
+        "性能",
+        NULL,
 };
 
 // TODO: this should be provided by the core
 static char* gamepad_labels[] = {
-	"Standard",
-	"DualShock",
-	NULL,
+        "标准",
+        "双震",
+        NULL,
 };
 static char* gamepad_values[] = {
 	"1",
@@ -812,10 +927,10 @@ enum {
 
 static inline char* getScreenScalingDesc(void) {
 	if (GFX_supportsOverscan()) {
-		return "Native uses integer scaling. Aspect uses core\nreported aspect ratio. Fullscreen has non-square\npixels. Cropped is integer scaled then cropped.";
+		return "原生模式使用整数缩放。\n等比模式使用核心报告的宽高比。\n全屏模式会产生非正方像素。\n裁剪模式先进行整数缩放再裁剪。";
 	}
 	else {
-		return "Native uses integer scaling.\nAspect uses core reported aspect ratio.\nFullscreen has non-square pixels.";
+		return "原生模式使用整数缩放。\n等比模式使用核心报告的宽高比。\n全屏模式会产生非正方像素。";
 	}
 }
 static inline int getScreenScalingCount(void) {
@@ -840,83 +955,83 @@ static struct Config {
 		.options = (Option[]){
 			[FE_OPT_SCALING] = {
 				.key	= "minarch_screen_scaling", 
-				.name	= "Screen Scaling",
+				.name	= "屏幕缩放",
 				.desc	= NULL, // will call getScreenScalingDesc()
 				.default_value = 1,
 				.value = 1,
 				.count = 3, // will call getScreenScalingCount()
-				.values = scaling_labels,
-				.labels = scaling_labels,
+                                .values = scaling_values,
+                                .labels = scaling_labels,
 			},
 			[FE_OPT_EFFECT] = {
 				.key	= "minarch_screen_effect",
-				.name	= "Screen Effect",
-				.desc	= "Grid simulates an LCD grid.\nLine simulates CRT scanlines.\nEffects usually look best at native scaling.",
+				.name	= "屏幕特效",
+				.desc	= "网格模拟 LCD 网格。\n线条模拟 CRT 扫描线。\n特效通常在原生缩放下效果最佳。",
 				.default_value = 0,
 				.value = 0,
 				.count = 3,
-				.values = effect_labels,
-				.labels = effect_labels,
+                                .values = effect_values,
+                                .labels = effect_labels,
 			},
 			[FE_OPT_SHARPNESS] = {
 				.key	= "minarch_screen_sharpness",
-				.name	= "Screen Sharpness",
-				.desc	= "Sharp uses nearest neighbor sampling.\nCrisp integer upscales before linear sampling.\nSoft uses linear sampling.",
+				.name	= "屏幕锐度",
+				.desc	= "锐利使用邻近采样。\n清晰会在线性采样前进行整数放大。\n柔和使用线性采样。",
 				.default_value = 2,
 				.value = 2,
 				.count = 3,
-				.values = sharpness_labels,
-				.labels = sharpness_labels,
+                                .values = sharpness_values,
+                                .labels = sharpness_labels,
 			},
 			[FE_OPT_TEARING] = {
 				.key	= "minarch_prevent_tearing",
-				.name	= "Prevent Tearing",
-				.desc	= "Wait for vsync before drawing the next frame.\nLenient only waits when within frame budget.\nStrict always waits.",
+				.name	= "防止撕裂",
+				.desc	= "在绘制下一帧前等待垂直同步。\n宽松仅在帧预算内等待。\n严格始终等待。",
 				.default_value = VSYNC_LENIENT,
 				.value = VSYNC_LENIENT,
 				.count = 3,
-				.values = tearing_labels,
-				.labels = tearing_labels,
+                                .values = tearing_values,
+                                .labels = tearing_labels,
 			},
 			[FE_OPT_OVERCLOCK] = {
 				.key	= "minarch_cpu_speed",
-				.name	= "CPU Speed",
-				.desc	= "Over- or underclock the CPU to prioritize\npure performance or power savings.",
+				.name	= "CPU 频率",
+				.desc	= "通过超频或降频 CPU 来优先保证\n性能或省电。",
 				.default_value = 1,
 				.value = 1,
 				.count = 3,
-				.values = overclock_labels,
-				.labels = overclock_labels,
+                                .values = overclock_values,
+                                .labels = overclock_labels,
 			},
 			[FE_OPT_THREAD] = {
 				.key	= "minarch_thread_video",
-				.name	= "Prioritize Audio",
-				.desc	= "Can eliminate crackle but\nmay cause dropped frames.\nOnly turn on if necessary.",
+				.name	= "音频优先",
+				.desc	= "可消除爆音，但\n可能造成掉帧。\n仅在必要时启用。",
 				.default_value = 0,
 				.value = 0,
 				.count = 2,
-				.values = onoff_labels,
-				.labels = onoff_labels,
+                                .values = onoff_values,
+                                .labels = onoff_labels,
 			},
 			[FE_OPT_DEBUG] = {
 				.key	= "minarch_debug_hud",
-				.name	= "Debug HUD",
-				.desc	= "Show frames per second, cpu load,\nresolution, and scaler information.",
+				.name	= "调试信息",
+				.desc	= "显示帧率、CPU 负载、\n分辨率以及缩放信息。",
 				.default_value = 0,
 				.value = 0,
 				.count = 2,
-				.values = onoff_labels,
-				.labels = onoff_labels,
+                                .values = onoff_values,
+                                .labels = onoff_labels,
 			},
 			[FE_OPT_MAXFF] = {
 				.key	= "minarch_max_ff_speed",
-				.name	= "Max FF Speed",
-				.desc	= "Fast forward will not exceed the\nselected speed (but may be less\ndepending on game and emulator).",
+				.name	= "快进上限",
+				.desc	= "快进速度不会超过所选数值\n（但可能因游戏和模拟器不同而更低）。",
 				.default_value = 3, // 4x
 				.value = 3, // 4x
 				.count = 8,
-				.values = max_ff_labels,
-				.labels = max_ff_labels,
+                                .values = max_ff_values,
+                                .labels = max_ff_labels,
 			},
 			[FE_OPT_COUNT] = {NULL}
 		}
@@ -1146,8 +1261,8 @@ static void Config_readControlsString(char* cfg) {
 		if ((tmp = strrchr(value, ':'))) *tmp = '\0'; // this is a binding artifact in default.cfg, ignore
 		
 		int id = -1;
-		for (int j=0; button_labels[j]; j++) {
-			if (!strcmp(button_labels[j],value)) {
+		for (int j=0; button_label_values[j]; j++) {
+			if (!strcmp(button_label_values[j],value)) {
 				id = j - 1;
 				break;
 			}
@@ -1172,8 +1287,8 @@ static void Config_readControlsString(char* cfg) {
 		if (!Config_getValue(cfg, key, value, NULL)) continue;
 		
 		int id = -1;
-		for (int j=0; button_labels[j]; j++) {
-			if (!strcmp(button_labels[j],value)) {
+		for (int j=0; button_label_values[j]; j++) {
+			if (!strcmp(button_label_values[j],value)) {
 				id = j - 1;
 				break;
 			}
@@ -1200,9 +1315,10 @@ static void Config_load(void) {
 	Option* scaling_option = &config.frontend.options[FE_OPT_SCALING];
 	scaling_option->desc = getScreenScalingDesc();
 	scaling_option->count = getScreenScalingCount();
-	if (!GFX_supportsOverscan()) {
-		scaling_labels[3] = NULL;
-	}
+        if (!GFX_supportsOverscan()) {
+                scaling_labels[3] = NULL;
+                scaling_values[3] = NULL;
+        }
 	
 	char* system_path = SYSTEM_PATH "/system.cfg";
 	
@@ -1300,13 +1416,13 @@ static void Config_write(int override) {
 		ButtonMapping* mapping = &config.controls[i];
 		int j = mapping->local + 1;
 		if (mapping->mod) j += LOCAL_BUTTON_COUNT;
-		fprintf(file, "bind %s = %s\n", mapping->name, button_labels[j]);
+		fprintf(file, "bind %s = %s\n", mapping->name, button_label_values[j]);
 	}
 	for (int i=0; config.shortcuts[i].name; i++) {
 		ButtonMapping* mapping = &config.shortcuts[i];
 		int j = mapping->local + 1;
 		if (mapping->mod) j += LOCAL_BUTTON_COUNT;
-		fprintf(file, "bind %s = %s\n", mapping->name, button_labels[j]);
+		fprintf(file, "bind %s = %s\n", mapping->name, button_label_values[j]);
 	}
 	
 	fclose(file);
@@ -3258,7 +3374,7 @@ static int OptionEmulator_optionChanged(MenuList* list, int i) {
 static int OptionEmulator_optionDetail(MenuList* list, int i) {
 	MenuItem* item = &list->items[i];
 	Option* option = OptionList_getOption(&config.core, item->key);
-	if (option->full) return Menu_message(option->full, (char*[]){ "B","BACK", NULL });
+	if (option->full) return Menu_message(option->full, (char*[]){ "B","返回", NULL });
 	else return MENU_CALLBACK_NOP;
 }
 static MenuList OptionEmulator_menu = {
@@ -3310,7 +3426,7 @@ static int OptionEmulator_openMenu(MenuList* list, int i) {
 		Menu_options(&OptionEmulator_menu);
 	}
 	else {
-		Menu_message("This core has no options.", (char*[]){ "B","BACK", NULL });
+		Menu_message("此核心没有可用选项。", (char*[]){ "B","返回", NULL });
 	}
 	
 	return MENU_CALLBACK_NOP;
@@ -3318,7 +3434,7 @@ static int OptionEmulator_openMenu(MenuList* list, int i) {
 
 int OptionControls_bind(MenuList* list, int i) {
 	MenuItem* item = &list->items[i];
-	if (item->values!=button_labels) {
+	if (item->values!=button_label_values) {
 		// LOG_info("changed gamepad_type\n");
 		return MENU_CALLBACK_NOP;
 	}
@@ -3353,7 +3469,7 @@ int OptionControls_bind(MenuList* list, int i) {
 }
 static int OptionControls_unbind(MenuList* list, int i) {
 	MenuItem* item = &list->items[i];
-	if (item->values!=button_labels) return MENU_CALLBACK_NOP;
+	if (item->values!=button_label_values) return MENU_CALLBACK_NOP;
 	
 	ButtonMapping* button = &config.controls[item->id];
 	button->local = -1;
@@ -3372,10 +3488,10 @@ static int OptionControls_optionChanged(MenuList* list, int i) {
 	return MENU_CALLBACK_NOP;
 }
 static MenuList OptionControls_menu = {
-	.type = MENU_INPUT,
-	.desc = "Press A to set and X to clear."
-		"\nSupports single button and MENU+button." // TODO: not supported on nano because POWER doubles as MENU
-	,
+        .type = MENU_INPUT,
+        .desc = "按 A 设置，按 X 清除。"
+                "\n支持单独按键以及菜单+按键组合。" // TODO: not supported on nano because POWER doubles as MENU
+        ,
 	.on_confirm = OptionControls_bind,
 	.on_change = OptionControls_unbind,
 	.items = NULL
@@ -3391,8 +3507,8 @@ static int OptionControls_openMenu(MenuList* list, int i) {
 		
 		if (has_custom_controllers) {
 			MenuItem* item = &OptionControls_menu.items[k++];
-			item->name = "Controller";
-			item->desc = "Select the type of controller.";
+			item->name = "控制器";
+			item->desc = "选择控制器类型。";
 			item->value = gamepad_type;
 			item->values = gamepad_labels;
 			item->on_change = OptionControls_optionChanged;
@@ -3406,11 +3522,11 @@ static int OptionControls_openMenu(MenuList* list, int i) {
 			
 			MenuItem* item = &OptionControls_menu.items[k++];
 			item->id = j;
-			item->name = button->name;
+			item->name = (char*)getControlDisplayName(button->name);
 			item->desc = NULL;
 			item->value = button->local + 1;
 			if (button->mod) item->value += LOCAL_BUTTON_COUNT;
-			item->values = button_labels;
+			item->values = button_label_values;
 		}
 	}
 	else {
@@ -3472,19 +3588,19 @@ static int OptionShortcuts_unbind(MenuList* list, int i) {
 	return MENU_CALLBACK_NOP;
 }
 static MenuList OptionShortcuts_menu = {
-	.type = MENU_INPUT,
-	.desc = "Press A to set and X to clear." 
-		"\nSupports single button and MENU+button." // TODO: not supported on nano because POWER doubles as MENU
-	,
+        .type = MENU_INPUT,
+        .desc = "按 A 设置，按 X 清除。"
+                "\n支持单独按键以及菜单+按键组合。" // TODO: not supported on nano because POWER doubles as MENU
+        ,
 	.on_confirm = OptionShortcuts_bind,
 	.on_change = OptionShortcuts_unbind,
 	.items = NULL
 };
 static char* getSaveDesc(void) {
 	switch (config.loaded) {
-		case CONFIG_NONE:		return "Using defaults."; break;
-		case CONFIG_CONSOLE:	return "Using console config."; break;
-		case CONFIG_GAME:		return "Using game config."; break;
+		case CONFIG_NONE:		return "使用默认配置。"; break;
+		case CONFIG_CONSOLE:	return "使用主机配置。"; break;
+		case CONFIG_GAME:		return "使用游戏配置。"; break;
 	}
 	return NULL;
 }
@@ -3496,11 +3612,11 @@ static int OptionShortcuts_openMenu(MenuList* list, int i) {
 			ButtonMapping* button = &config.shortcuts[j];
 			MenuItem* item = &OptionShortcuts_menu.items[j];
 			item->id = j;
-			item->name = button->name;
+			item->name = (char*)getShortcutDisplayName(button->name);
 			item->desc = NULL;
 			item->value = button->local + 1;
 			if (button->mod) item->value += LOCAL_BUTTON_COUNT;
-			item->values = button_labels;
+			item->values = button_label_values;
 		}
 	}
 	else {
@@ -3522,22 +3638,22 @@ static int OptionSaveChanges_onConfirm(MenuList* list, int i) {
 	switch (i) {
 		case 0: {
 			Config_write(CONFIG_WRITE_ALL);
-			message = "Saved for console.";
+			message = "已为主机保存。";
 			break;
 		}
 		case 1: {
 			Config_write(CONFIG_WRITE_GAME);
-			message = "Saved for game.";
+			message = "已为游戏保存。";
 			break;
 		}
 		default: {
 			Config_restore();
-			if (config.loaded) message = "Restored console defaults.";
-			else message = "Restored defaults.";
+			if (config.loaded) message = "已恢复主机默认值。";
+			else message = "已恢复默认值。";
 			break;
 		}
 	}
-	Menu_message(message, (char*[]){ "A","OKAY", NULL });
+	Menu_message(message, (char*[]){ "A","确定", NULL });
 	OptionSaveChanges_updateDesc();
 	return MENU_CALLBACK_EXIT;
 }
@@ -3545,9 +3661,9 @@ static MenuList OptionSaveChanges_menu = {
 	.type = MENU_LIST,
 	.on_confirm = OptionSaveChanges_onConfirm,
 	.items = (MenuItem[]){
-		{"Save for console"},
-		{"Save for game"},
-		{"Restore defaults"},
+		{"为主机保存"},
+		{"为游戏保存"},
+		{"恢复默认值"},
 		{NULL},
 	}
 };
@@ -3566,11 +3682,11 @@ static int OptionQuicksave_onConfirm(MenuList* list, int i) {
 static MenuList options_menu = {
 	.type = MENU_LIST,
 	.items = (MenuItem[]) {
-		{"Frontend", "MinUI (" BUILD_DATE " " BUILD_HASH ")",.on_confirm=OptionFrontend_openMenu},
-		{"Emulator",.on_confirm=OptionEmulator_openMenu},
-		{"Controls",.on_confirm=OptionControls_openMenu},
-		{"Shortcuts",.on_confirm=OptionShortcuts_openMenu}, 
-		{"Save Changes",.on_confirm=OptionSaveChanges_openMenu},
+		{"前端", "MinUI (" BUILD_DATE " " BUILD_HASH ")",.on_confirm=OptionFrontend_openMenu},
+		{"模拟器",.on_confirm=OptionEmulator_openMenu},
+		{"按键映射",.on_confirm=OptionControls_openMenu},
+		{"快捷键",.on_confirm=OptionShortcuts_openMenu}, 
+		{"保存更改",.on_confirm=OptionSaveChanges_openMenu},
 		{NULL},
 		{NULL},
 		{NULL},
@@ -3582,6 +3698,12 @@ static void OptionSaveChanges_updateDesc(void) {
 }
 
 #define OPTION_PADDING 8
+
+static const char* Menu_getDisplayValue(MenuItem* item, int index) {
+        if (!item->values) return NULL;
+        if (item->values==button_label_values) return button_label_texts[index];
+        return item->values[index];
+}
 
 static int Menu_options(MenuList* list) {
 	MenuItem* items = list->items;
@@ -3655,7 +3777,7 @@ static int Menu_options(MenuList* list) {
 		}
 		else {
 			MenuItem* item = &items[selected];
-			if (item->values && item->values!=button_labels) { // not an input binding
+			if (item->values && item->values!=button_label_values) { // not an input binding
 				if (PAD_justRepeated(BTN_LEFT)) {
 					if (item->value>0) item->value -= 1;
 					else {
@@ -3693,7 +3815,7 @@ static int Menu_options(MenuList* list) {
 			// TODO: is there a way to defer on_confirm for MENU_INPUT so we can clear the currently set value to indicate it is awaiting input? 
 			// eg. set a flag to call on_confirm at the beginning of the next frame?
 			else if (list->on_confirm) {
-				if (item->values==button_labels) await_input = 1; // button binding
+				if (item->values==button_label_values) await_input = 1; // button binding
 				else result = list->on_confirm(list, selected); // list-specific action, eg. show item detail view or input binding
 			}
 			if (result==MENU_CALLBACK_EXIT) show_options = 0;
@@ -3820,7 +3942,7 @@ static int Menu_options(MenuList* list) {
 					}
 					
 					if (item->value>=0) {
-						text = TTF_RenderUTF8_Blended(font.tiny, item->values[item->value], COLOR_WHITE); // always white
+						text = TTF_RenderUTF8_Blended(font.tiny, Menu_getDisplayValue(item, item->value), COLOR_WHITE); // always white
 						SDL_BlitSurface(text, NULL, screen, &(SDL_Rect){
 							ox + mw - text->w - SCALE1(OPTION_PADDING),
 							oy+SCALE1((j*BUTTON_SIZE)+3)
@@ -3868,7 +3990,7 @@ static int Menu_options(MenuList* list) {
 						// so only calculate rw for the first item...
 						if (!mrw || type!=MENU_INPUT) {
 							for (int j=0; item->values[j]; j++) {
-								TTF_SizeUTF8(font.tiny, item->values[j], &rw, NULL);
+								TTF_SizeUTF8(font.tiny, Menu_getDisplayValue(item, j), &rw, NULL);
 								if (lw+rw>w) w = lw+rw;
 								if (rw>mrw) mrw = rw;
 							}
@@ -3925,7 +4047,7 @@ static int Menu_options(MenuList* list) {
 						// buh
 					}
 					else if (item->value>=0) {
-						text = TTF_RenderUTF8_Blended(font.tiny, item->values[item->value], COLOR_WHITE); // always white
+						text = TTF_RenderUTF8_Blended(font.tiny, Menu_getDisplayValue(item, item->value), COLOR_WHITE); // always white
 						SDL_BlitSurface(text, NULL, screen, &(SDL_Rect){
 							ox + mw - text->w - SCALE1(OPTION_PADDING),
 							oy+SCALE1((j*BUTTON_SIZE)+3)
@@ -4266,7 +4388,7 @@ static void Menu_loop(void) {
 	char disc_name[16];
 	if (menu.total_discs) {
 		rom_disc = menu.disc;
-		sprintf(disc_name, "Disc %i", menu.disc+1);
+		sprintf(disc_name, "光盘 %i", menu.disc+1);
 	}
 		
 	int selected = 0; // resets every launch
@@ -4301,7 +4423,7 @@ static void Menu_loop(void) {
 				menu.disc -= 1;
 				if (menu.disc<0) menu.disc += menu.total_discs;
 				dirty = 1;
-				sprintf(disc_name, "Disc %i", menu.disc+1);
+				sprintf(disc_name, "光盘 %i", menu.disc+1);
 			}
 			else if (selected==ITEM_SAVE || selected==ITEM_LOAD) {
 				menu.slot -= 1;
@@ -4314,7 +4436,7 @@ static void Menu_loop(void) {
 				menu.disc += 1;
 				if (menu.disc==menu.total_discs) menu.disc -= menu.total_discs;
 				dirty = 1;
-				sprintf(disc_name, "Disc %i", menu.disc+1);
+				sprintf(disc_name, "光盘 %i", menu.disc+1);
 			}
 			else if (selected==ITEM_SAVE || selected==ITEM_LOAD) {
 				menu.slot += 1;
@@ -4425,9 +4547,9 @@ static void Menu_loop(void) {
 			});
 			SDL_FreeSurface(text);
 			
-			if (show_setting && !GetHDMI()) GFX_blitHardwareHints(screen, show_setting);
-			else GFX_blitButtonGroup((char*[]){ BTN_SLEEP==BTN_POWER?"POWER":"MENU","SLEEP", NULL }, 0, screen, 0);
-			GFX_blitButtonGroup((char*[]){ "B","BACK", "A","OKAY", NULL }, 1, screen, 1);
+                        if (show_setting && !GetHDMI()) GFX_blitHardwareHints(screen, show_setting);
+                        else GFX_blitButtonGroup((char*[]){ BTN_SLEEP==BTN_POWER?"电源":"菜单","休眠", NULL }, 0, screen, 0);
+			GFX_blitButtonGroup((char*[]){ "B","返回", "A","确定", NULL }, 1, screen, 1);
 			
 			// list
 			oy = (((DEVICE_HEIGHT / FIXED_SCALE) - PADDING * 2) - (MENU_ITEM_COUNT * PILL_SIZE)) / 2;
@@ -4516,8 +4638,8 @@ static void Menu_loop(void) {
 				else {
 					SDL_Rect preview_rect = {ox,oy,hw,hh};
 					SDL_FillRect(screen, &preview_rect, 0);
-					if (menu.save_exists) GFX_blitMessage(font.large, "No Preview", screen, &preview_rect);
-					else GFX_blitMessage(font.large, "Empty Slot", screen, &preview_rect);
+					if (menu.save_exists) GFX_blitMessage(font.large, "无预览", screen, &preview_rect);
+					else GFX_blitMessage(font.large, "空槽位", screen, &preview_rect);
 				}
 				
 				// pagination
