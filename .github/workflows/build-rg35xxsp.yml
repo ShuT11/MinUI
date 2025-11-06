@@ -1,0 +1,40 @@
+name: Build RG35XXSP Firmware
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Cache toolchain
+        uses: actions/cache@v4
+        with:
+          path: toolchains
+          key: ${{ runner.os }}-toolchains-rg35xxsp-${{ hashFiles('makefile.toolchain') }}
+          restore-keys: |
+            ${{ runner.os }}-toolchains-rg35xxsp-
+
+      - name: Build MinUI binaries
+        run: |
+          script -qfc "make PLATFORM=rg35xxsp build"
+
+      - name: Package firmware
+        run: |
+          script -qfc "make PLATFORMS=rg35xxsp setup system cores special package"
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rg35xxsp-firmware
+          path: |
+            build/BASE
+            build/EXTRAS
+            releases
